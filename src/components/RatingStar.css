@@ -1,0 +1,21 @@
+.rating-star {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .rating-star svg {
+    color: #f1c40f;
+    font-size: 24px;
+    margin-right: 5px;
+  }
+  
+  .rating-number {
+    font-size: 16px;
+    color: white;
+  }
