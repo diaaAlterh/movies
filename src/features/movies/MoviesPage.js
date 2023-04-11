@@ -1,4 +1,3 @@
-import useFetch from "../../hooks/useFetch";
 import { useEffect, useState } from "react";
 import styles from "./MoviesPage.module.css";
 import SearchAppBar from "../../components/SearchAppBar";
@@ -6,24 +5,35 @@ import LinearBuffer from "../../components/LinearBuffer";
 import { Box } from "@mui/material";
 import PaginationComponent from "../../components/PaginationComponent";
 import RatingStar from "../../components/RatingStar";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import moviesSlice, { getMovies } from "../../app/moviesSlice";
 
 function MoviesPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [page, setPage] = useState(1);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const dispatch = useDispatch();
+  const movies = useSelector((state) => state.movies.movies);
+  const error = useSelector((state) => state.movies.error);
+  const isLoading = useSelector((state) => state.movies.isLoading);
+  const pagesCount = useSelector((state) => state.movies.pagesCount);
+  const page = useSelector((state) => state.movies.page);
+  const search = useSelector((state) => state.movies.search);
+  const [searchTerm, setSearchTerm] = useState(search);
 
-  const { data, isLoading, error } = useFetch(
-    `https://yts.mx/api/v2/list_movies.json?query_term=${debouncedSearchTerm}&limit=50&sort_by=download_count&page=${page}`
-  );
+  useEffect(() => {
+    dispatch(getMovies({ page, search }));
+  }, [search, page, dispatch]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-      setPage(1);
-    }, 500);
-
+      dispatch(
+        moviesSlice.actions.updateData({
+          search: searchTerm,
+          page: searchTerm ? page : 1,
+        })
+      );
+    }, 1000);
     return () => clearTimeout(debounceTimeout);
-  }, [searchTerm]);
+  }, [searchTerm, page, dispatch]);
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
@@ -39,8 +49,6 @@ function MoviesPage() {
     return <div>Error: {error}</div>;
   }
 
-  const movies = data?.data?.movies ?? [];
-
   return (
     <>
       <SearchAppBar
@@ -53,36 +61,42 @@ function MoviesPage() {
         <>
           <ul className={styles.movieGrid}>
             {movies.map((movie) => (
-              <li
-                key={movie.imdb_code}
-                className={styles.movieItem}
-                onMouseEnter={handleMovieHover}
-                onMouseLeave={handleMovieHover}
-              >
-                <img
-                  className={`${styles.posterImage} posterImage`}
-                  src={movie.large_cover_image}
-                  alt={movie.title}
-                  onError={(e) => {
-                    e.target.src = movie.background_image;
-                    e.target.onerror = null;
-                  }}
-                />
+              <Link key={movie.imdb_code} to={`movies/${movie.imdb_code}`}>
+                <li
+                  className={styles.movieItem}
+                  onMouseEnter={handleMovieHover}
+                  onMouseLeave={handleMovieHover}
+                >
+                  <img
+                    className={`${styles.posterImage} posterImage`}
+                    src={movie.large_cover_image}
+                    alt={movie.title}
+                    onError={(e) => {
+                      e.target.src = movie.background_image;
+                      e.target.onerror = null;
+                    }}
+                  />
 
-                <div className={styles.movieTitle}>
-                  {movie.title}
-                  {"\n"}({movie.year})
-                </div>
-                <RatingStar rating={movie.rating}></RatingStar>
-              </li>
+                  <div className={styles.movieTitle}>
+                    {movie.title}
+                    {"\n"}({movie.year})
+                  </div>
+                  <RatingStar rating={movie.rating}></RatingStar>
+                </li>
+              </Link>
             ))}
           </ul>
           <PaginationComponent
             onChange={(e, value) => {
-              setPage(value);
+              dispatch(
+                moviesSlice.actions.updateData({
+                  search,
+                  page: value,
+                })
+              );
             }}
             page={page}
-            count={((data?.data?.movie_count ?? 50) / 50).toFixed()}
+            count={pagesCount}
           ></PaginationComponent>
         </>
       )}
