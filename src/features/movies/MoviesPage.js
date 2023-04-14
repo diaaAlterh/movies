@@ -4,10 +4,11 @@ import SearchAppBar from "../../components/SearchAppBar";
 import LinearBuffer from "../../components/LinearBuffer";
 import { Box } from "@mui/material";
 import PaginationComponent from "../../components/PaginationComponent";
-import RatingStar from "../../components/RatingStar";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moviesSlice, { getMovies } from "../../app/moviesSlice";
+import Error from "../../components/Error";
+import MovieItem from "./MovieItem";
 
 function MoviesPage() {
   const dispatch = useDispatch();
@@ -28,25 +29,19 @@ function MoviesPage() {
       dispatch(
         moviesSlice.actions.updateData({
           search: searchTerm,
-          page: searchTerm ? page : 1,
+          page: 1,
         })
       );
     }, 1000);
     return () => clearTimeout(debounceTimeout);
-  }, [searchTerm, page, dispatch]);
+  }, [searchTerm, dispatch]);
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleMovieHover = (event) => {
-    event.currentTarget
-      .querySelector(".posterImage")
-      .classList.toggle(styles.hovered);
-  };
-
   if (error) {
-    return <div>Error: {error}</div>;
+    return <Error></Error>;
   }
 
   return (
@@ -61,28 +56,16 @@ function MoviesPage() {
         <>
           <ul className={styles.movieGrid}>
             {movies.map((movie) => (
-              <Link key={movie.imdb_code} to={`movies/${movie.imdb_code}`}>
-                <li
-                  className={styles.movieItem}
-                  onMouseEnter={handleMovieHover}
-                  onMouseLeave={handleMovieHover}
-                >
-                  <img
-                    className={`${styles.posterImage} posterImage`}
-                    src={movie.large_cover_image}
-                    alt={movie.title}
-                    onError={(e) => {
-                      e.target.src = movie.background_image;
-                      e.target.onerror = null;
-                    }}
-                  />
-
-                  <div className={styles.movieTitle}>
-                    {movie.title}
-                    {"\n"}({movie.year})
-                  </div>
-                  <RatingStar rating={movie.rating}></RatingStar>
-                </li>
+              <Link
+                key={movie.imdb_code}
+                to={`/movies/${movie.imdb_code}`}
+                state={movie}
+              >
+                <MovieItem
+                  image={movie.large_cover_image}
+                  title={movie.title_long}
+                  rating={movie.rating}
+                ></MovieItem>
               </Link>
             ))}
           </ul>
