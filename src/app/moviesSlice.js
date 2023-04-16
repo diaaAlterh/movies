@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { ytsBaseUrl } from "./utils";
 
 const initialMoviesState = {
   movies: [],
@@ -12,7 +13,9 @@ const initialMoviesState = {
 export const getMovies = createAsyncThunk("movies", async (props) => {
   try {
     const response = await fetch(
-      `https://yts.mx/api/v2/list_movies.json?query_term=${props.search}&limit=50&sort_by=like_count&page=${props.page}&minimum_rating=4`
+      props.search
+        ? `${ytsBaseUrl}list_movies.json?query_term=${props.search}&limit=50&sort_by=like_count&genre=${props?.genre??''}`
+        : `${ytsBaseUrl}list_movies.json?limit=50&sort_by=like_count&page=${props.page}&minimum_rating=6&genre=${props?.genre??''}`
     );
     if (!response.ok) {
       throw new Error("Something went wrong");

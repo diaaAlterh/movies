@@ -1,5 +1,7 @@
 export const apiKey = "529bf848d14b9fc7da265edcae678a08";
 export const moviePlaceHolder = "https://image.tmdb.org/t/p/w600_and_h900_bestv2/4fjH8U2A1V9n4EoRKv9EviHss4M.jpg";
+export const tmdbBaseUrl = "https://api.themoviedb.org/3/";
+export const ytsBaseUrl='https://yts.mx/api/v2/';
 
 export const pathToImageUrl = (path) => {
   return `https://www.themoviedb.org/t/p/w600_and_h900_bestv2${path}`;
@@ -8,11 +10,11 @@ export const pathToImageUrl = (path) => {
 export const convertToHoursAndMinutes = (minutes) => {
   let hours = Math.floor(minutes / 60);
   let remainingMinutes = minutes % 60;
-  return (
+  return ("Duration: "+
     hours.toString() +
     " Hours " +
     remainingMinutes.toString().padStart(2, "0") +
-    " Minutes of "
+    " Minutes"
   );
 };
 

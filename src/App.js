@@ -1,9 +1,14 @@
 import React from "react";
 import MoviesPage from "./features/movies/MoviesPage";
-import MovieDetails from "./features/movies/MovieDetails";
+import MovieDetails, {
+  loader as detailsLoader,
+} from "./features/movies/MovieDetails";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Error from "./components/Error";
 import HomePage from "./features/app/HomePage";
+import ActorDetails, {
+  loader as actorDetailsLoader,
+} from "./features/movies/ActorDetails";
 
 import MovieImages, {
   loader as imagesLoader,
@@ -16,12 +21,24 @@ const router = createBrowserRouter([
     errorElement: <Error></Error>,
     children: [
       { index: true, element: <MoviesPage></MoviesPage> },
+      { path: "movies/genres/:genre", element: <MoviesPage></MoviesPage> },
       {
         path: "movies/:id",
         element: <MovieDetails></MovieDetails>,
+        loader: detailsLoader,
       },
       {
         path: "movies/:id/images",
+        element: <MovieImages></MovieImages>,
+        loader: imagesLoader,
+      },
+      {
+        path: "actor/:id",
+        element: <ActorDetails></ActorDetails>,
+        loader: actorDetailsLoader,
+      },
+      {
+        path: "actor/:id/images",
         element: <MovieImages></MovieImages>,
         loader: imagesLoader,
       },
@@ -34,3 +51,5 @@ function App() {
 }
 
 export default App;
+
+///you can use Form from react router and use action function and useNavigation to know the status redirect

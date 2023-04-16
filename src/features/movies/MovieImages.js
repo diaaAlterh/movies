@@ -1,11 +1,14 @@
 import styles from "./MoviesPage.module.css";
 import { json, useLoaderData } from "react-router-dom";
-import { apiKey, pathToImageUrl } from "../../app/utils";
-
+import { apiKey, pathToImageUrl, tmdbBaseUrl } from "../../app/utils";
 
 const MovieImages = () => {
   const data = useLoaderData();
-  const images = [...data.backdrops,...data.posters];
+  const images = [
+    ...(data?.backdrops ?? []),
+    ...(data?.posters ?? []),
+    ...(data?.profiles ?? []),
+  ];
 
   const handleMovieHover = (event) => {
     event.currentTarget
@@ -17,7 +20,7 @@ const MovieImages = () => {
     <ul className={styles.movieGrid}>
       {images.map((image) => (
         <li
-          key={image.id}
+          key={image.file_path}
           className={styles.movieItem}
           onMouseEnter={handleMovieHover}
           onMouseLeave={handleMovieHover}
@@ -27,8 +30,6 @@ const MovieImages = () => {
             src={pathToImageUrl(image.file_path)}
             alt={image.name}
           />
-
-          {/* <div className={styles.movieTitle}>{actor.character}<br></br>({actor.name})</div> */}
         </li>
       ))}
     </ul>
@@ -37,10 +38,13 @@ const MovieImages = () => {
 
 export default MovieImages;
 
-export const loader = async ({ params }) => {
+export const loader = async (props) => {
+  const isForActor = props.request.url.includes("actor");
   try {
     const imagesResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${params.id}/images?api_key=${apiKey}&language=en-US&include_image_language=en,null`
+      `${tmdbBaseUrl}${isForActor ? "person" : "movie"}/${
+        props.params.id
+      }/images?api_key=${apiKey}&language=en-US&include_image_language=en,null`
     );
 
     if (!imagesResponse.ok) {

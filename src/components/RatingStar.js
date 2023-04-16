@@ -8,7 +8,7 @@ function RatingStar(props) {
     <div className={props.id ? "rating-star-big" : "rating-star"}>
       {props.id ? (
         <a
-          href={`https://www.imdb.com/title/${props.id}/`}
+          href={`https://www.imdb.com/${props.rating?"title":"name"}/${props.id}/`}
           target="_blank"
           rel="noreferrer"
         >

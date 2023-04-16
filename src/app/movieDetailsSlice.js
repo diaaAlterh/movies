@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { apiKey, compareArrays } from "./utils";
+import { apiKey, compareArrays,tmdbBaseUrl } from "./utils";
 
 const initialMoviesState = {
   movie: {},
@@ -9,17 +9,8 @@ const initialMoviesState = {
 
 export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
   try {
-    const ytsResponse = await fetch(
-      `https://yts.mx/api/v2/movie_details.json?imdb_id=${id}`
-    );
-
-    if (!ytsResponse.ok) {
-      throw new Error("Something went wrong");
-    }
-    const ytsData = await ytsResponse.json();
-
     const idResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${id}/external_ids?api_key=${apiKey}`
+      `${tmdbBaseUrl}movie/${id}/external_ids?api_key=${apiKey}`
     );
 
     if (!idResponse.ok) {
@@ -28,7 +19,7 @@ export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
     const idData = await idResponse.json();
 
     const creditsResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${idData.id}/credits?api_key=${apiKey}`
+      `${tmdbBaseUrl}movie/${idData.id}/credits?api_key=${apiKey}`
     );
 
     if (!creditsResponse.ok) {
@@ -38,7 +29,7 @@ export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
     const creditsData = await creditsResponse.json();
 
     const movieResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${idData.id}?api_key=${apiKey}`
+      `${tmdbBaseUrl}movie/${idData.id}?api_key=${apiKey}`
     );
 
     if (!movieResponse.ok) {
@@ -50,7 +41,7 @@ export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
     const genresIds = movieData.genres.map((item) => item.id);
 
     const recommendationsResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${idData.id}/recommendations?api_key=${apiKey}`
+      `${tmdbBaseUrl}movie/${idData.id}/recommendations?api_key=${apiKey}`
     );
 
     if (!recommendationsResponse.ok) {
@@ -60,7 +51,7 @@ export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
     const recommendationsData = await recommendationsResponse.json();
 
     const videoResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${idData.id}/videos?api_key=${apiKey}`
+      `${tmdbBaseUrl}movie/${idData.id}/videos?api_key=${apiKey}`
     );
 
     if (!videoResponse.ok) {
@@ -76,12 +67,11 @@ export const getMovieDetails = createAsyncThunk("movies", async ({ id }) => {
 
     return {
       movie: movieData,
-      yts: ytsData.data.movie,
       ids: idData,
-      cast: creditsData.cast.slice(0, 7),
+      cast: creditsData.cast.filter((actor)=>{return actor.profile_path!==null}).slice(0,14),
       video: bestVideo,
       recommendations: recommendationsData.results.filter((movie) => {
-        return compareArrays(genresIds, movie.genre_ids);
+        return compareArrays(genresIds, movie.genre_ids)&&movie.backdrop_path !== null&&movie.vote_count>1000;;
       }),
     };
   } catch (error) {

@@ -4,7 +4,7 @@ import SearchAppBar from "../../components/SearchAppBar";
 import LinearBuffer from "../../components/LinearBuffer";
 import { Box } from "@mui/material";
 import PaginationComponent from "../../components/PaginationComponent";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import moviesSlice, { getMovies } from "../../app/moviesSlice";
 import Error from "../../components/Error";
@@ -19,22 +19,23 @@ function MoviesPage() {
   const page = useSelector((state) => state.movies.page);
   const search = useSelector((state) => state.movies.search);
   const [searchTerm, setSearchTerm] = useState(search);
+  const genre = useParams().genre;
 
   useEffect(() => {
-    dispatch(getMovies({ page, search }));
-  }, [search, page, dispatch]);
+    dispatch(getMovies({ page, search, genre }));
+  }, [search, page, genre, dispatch]);
 
   useEffect(() => {
     const debounceTimeout = setTimeout(() => {
       dispatch(
         moviesSlice.actions.updateData({
           search: searchTerm,
-          page: 1,
+          page: page,
         })
       );
     }, 1000);
     return () => clearTimeout(debounceTimeout);
-  }, [searchTerm, dispatch]);
+  }, [searchTerm, page, dispatch]);
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
@@ -48,6 +49,7 @@ function MoviesPage() {
     <>
       <SearchAppBar
         value={searchTerm}
+        genre={genre}
         onChange={handleSearchTermChange}
       ></SearchAppBar>
       <Box height="65px"></Box>

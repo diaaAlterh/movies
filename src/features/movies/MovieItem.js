@@ -2,6 +2,7 @@ import { useState } from "react";
 import RatingStar from "../../components/RatingStar";
 import styles from "./MoviesPage.module.css";
 import { moviePlaceHolder } from "../../app/utils";
+import { Button } from "@mui/material";
 
 const MovieItem = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -15,27 +16,41 @@ const MovieItem = (props) => {
       .classList.toggle(styles.hovered);
   };
   return (
-    <li
-      onClick={props.onClick}
+    <Button
       key={props.id}
-      className={styles.movieItem}
-      onMouseEnter={handleMovieHover}
-      onMouseLeave={handleMovieHover}
+      sx={{
+        ":hover": {
+          bgcolor: "primary", // theme.palette.primary.main
+          color: "white",
+        },
+      }}
+      variant="text"
+      onClick={props.onClick}
+      style={{ padding: 0 }}
     >
-      <img
-        className={`${styles.posterImage} posterImage`}
-        src={isLoading ? moviePlaceHolder : props.image}
-        alt={props.title}
-        onLoad={handleImageLoad}
-        onError={(e) => {
-          e.target.src = moviePlaceHolder;
-          e.target.onerror = null;
-        }}
-      />
-
-      <div className={styles.movieTitle}>{props.title}</div>
-      {props.rating && <RatingStar rating={props.rating}></RatingStar>}
-    </li>
+      <li
+        className={styles.movieItem}
+        onMouseEnter={handleMovieHover}
+        onMouseLeave={handleMovieHover}
+      >
+        <img
+          className={`${styles.posterImage} posterImage`}
+          src={props.image}
+          alt={props.title}
+          onLoad={handleImageLoad}
+          onError={(e) => {
+            e.target.src = moviePlaceHolder;
+            e.target.onerror = null;
+          }}
+        />
+        {!isLoading && (
+          <>
+            <div className={styles.movieTitle}>{props.title}</div>
+            {props.rating && <RatingStar rating={props.rating}></RatingStar>}
+          </>
+        )}
+      </li>
+    </Button>
   );
 };
 export default MovieItem;

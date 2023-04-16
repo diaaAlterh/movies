@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./DetailsHeader.module.css";
 import { convertToHoursAndMinutes, pathToImageUrl } from "../app/utils";
 import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const DetailsHeader = ({ movieDetails }) => {
   return (
@@ -25,12 +26,28 @@ const DetailsHeader = ({ movieDetails }) => {
         </Link>
         <div className={styles.description}>
           <h3>{movieDetails?.movie?.tagline ?? ""}</h3>
-          <p>
-            {convertToHoursAndMinutes(movieDetails?.movie?.runtime ?? 0)}
-            {(movieDetails?.movie?.genres ?? [])
-              .map((genre) => genre.name)
-              .join(", ")}
-          </p>
+          <p>{convertToHoursAndMinutes(movieDetails?.movie?.runtime ?? 0)}</p>
+
+          {(movieDetails?.movie?.genres ?? []).map((genre) => {
+            let genreName;
+            if (genre.name === "Science Fiction") {
+              genreName = "Sci-Fi";
+            } else {
+              genreName = genre.name;
+            }
+            return (
+              <Link to={`/movies/genres/${genreName}`}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  style={{ marginRight: "20px", marginLeft: "0" }}
+                >
+                  {genre.name}
+                </Button>
+              </Link>
+            );
+          })}
+
           <p>{movieDetails?.movie?.overview ?? ""}</p>
           <p>
             {(movieDetails?.movie?.spoken_languages ?? [])
