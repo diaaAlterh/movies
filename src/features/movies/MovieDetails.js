@@ -24,12 +24,14 @@ import YouTube from "react-youtube";
 import { TwitterTimelineEmbed } from "react-twitter-embed";
 import SideTitle from "../../components/SideTitle";
 import MovieItem from "./MovieItem";
+import { useMediaQuery } from "@mui/material";
 
 const MovieDetails = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
   const data = useLoaderData();
+  const matches = useMediaQuery("(min-width:800px)");
   const movie = data?.data?.movie;
 
   const movieDetails = useSelector((state) => state.movieDetails.movie);
@@ -57,13 +59,16 @@ const MovieDetails = () => {
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="fixed" style={{ backgroundColor: "#13161d" }}>
+          <AppBar position="absoulte" style={{ backgroundColor: "#13161d" }}>
             <Toolbar>
               <Typography
-                variant="h5"
+                variant={matches ? "h5" : null}
                 noWrap
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
+                sx={{
+                  width: "100%",
+                  mx: "auto",
+                }}
               >
                 {movie.title_long ?? ""}
               </Typography>
@@ -76,7 +81,6 @@ const MovieDetails = () => {
             </Toolbar>
           </AppBar>
         </Box>
-        <Box height="65px"></Box>
         {isLoading && <LinearBuffer></LinearBuffer>}
 
         {!isLoading && !error && movieDetails?.movie && (
@@ -99,12 +103,25 @@ const MovieDetails = () => {
                   useFlexGap
                   spacing={{ xs: 1, sm: 4 }}
                 >
-                  <YouTube videoId={movieDetails.video.key} />
+                  <YouTube
+                    videoId={movieDetails.video.key}
+                    opts={
+                      matches
+                        ? {
+                            width: 600,
+                            height: 500,
+                          }
+                        : {
+                            width: 350,
+                            height: 300,
+                          }
+                    }
+                  />
                   {movieDetails.ids.twitter_id && (
                     <TwitterTimelineEmbed
                       sourceType="profile"
                       screenName={movieDetails.ids.twitter_id}
-                      options={{ height: 500, width: 600 }}
+                      options={{ height: 500, width: matches ? 600 : 350 }}
                     />
                   )}
                 </Stack>

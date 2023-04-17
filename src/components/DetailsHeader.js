@@ -2,9 +2,11 @@ import React from "react";
 import styles from "./DetailsHeader.module.css";
 import { convertToHoursAndMinutes, pathToImageUrl } from "../app/utils";
 import { Link } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Stack, useMediaQuery } from "@mui/material";
 
 const DetailsHeader = ({ movieDetails }) => {
+  const matches = useMediaQuery("(min-width:800px)");
+
   return (
     <div className={styles.container}>
       <div className={styles.background}>
@@ -27,26 +29,27 @@ const DetailsHeader = ({ movieDetails }) => {
         <div className={styles.description}>
           <h3>{movieDetails?.movie?.tagline ?? ""}</h3>
           <p>{convertToHoursAndMinutes(movieDetails?.movie?.runtime ?? 0)}</p>
-
-          {(movieDetails?.movie?.genres ?? []).map((genre) => {
-            let genreName;
-            if (genre.name === "Science Fiction") {
-              genreName = "Sci-Fi";
-            } else {
-              genreName = genre.name;
-            }
-            return (
-              <Link to={`/movies/genres/${genreName}`}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ marginRight: "20px", marginLeft: "0" }}
-                >
-                  {genre.name}
-                </Button>
-              </Link>
-            );
-          })}
+          <Stack direction={matches?"row":"column"} flexWrap="wrap" spacing={{ xs: 1, sm: 4, }}>
+            {(movieDetails?.movie?.genres ?? []).map((genre) => {
+              let genreName;
+              if (genre.name === "Science Fiction") {
+                genreName = "Sci-Fi";
+              } else {
+                genreName = genre.name;
+              }
+              return (
+                <Link to={`/movies/genres/${genreName}`}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ marginLeft: "0" }}
+                  >
+                    {genre.name}
+                  </Button>
+                </Link>
+              );
+            })}
+          </Stack>
 
           <p>{movieDetails?.movie?.overview ?? ""}</p>
           <p>

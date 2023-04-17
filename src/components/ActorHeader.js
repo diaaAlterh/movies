@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 const ActorHeader = ({ actor }) => {
   const matches = useMediaQuery('(min-width:800px)');
-  console.log(matches);
 
   return (
     <Stack

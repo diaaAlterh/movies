@@ -1,9 +1,11 @@
-import { Typography } from "@mui/material";
+import { Typography, useMediaQuery } from "@mui/material";
 
 const SideTitle = (props) => {
+  const matches = useMediaQuery("(min-width:768px)");
+
   return (
     <Typography
-      variant="h4"
+      variant={matches?"h4":"s1"}
       noWrap
       component="div"
       sx={{

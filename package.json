@@ -1,7 +1,7 @@
 {
   "name": "movies",
   "version": "0.1.0",
-  "homepage": "https://diaaAlterh.github.io/",
+  "homepage": "https://diaaAlterh.github.io/movies/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
