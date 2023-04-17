@@ -19,7 +19,7 @@ const DetailsHeader = ({ movieDetails }) => {
       </div>
 
       <div className={styles.inner}>
-        <Link to={`/movies/${movieDetails.movie.id}/images`}>
+        <Link to={`images`}>
           <img
             src={pathToImageUrl(movieDetails?.movie?.poster_path ?? "")}
             alt="Inner"
@@ -38,7 +38,7 @@ const DetailsHeader = ({ movieDetails }) => {
                 genreName = genre.name;
               }
               return (
-                <Link to={`/movies/genres/${genreName}`}>
+                <Link to={`/genres/${genreName}`}>
                   <Button
                     variant="contained"
                     color="primary"

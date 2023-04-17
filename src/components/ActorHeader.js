@@ -14,7 +14,7 @@ const ActorHeader = ({ actor }) => {
       justifyContent="center"
       alignItems="center"
     >
-      <Link to={`/actor/${actor.id}/images`}>
+      <Link to={`images`}>
         <img
           src={pathToImageUrl(actor?.profile_path ?? "")}
           alt="Inner"

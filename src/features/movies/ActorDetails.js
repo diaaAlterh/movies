@@ -32,7 +32,7 @@ const ActorDetails = () => {
         throw new Error("Something went wrong");
       }
       const idData = await idResponse.json();
-      navigate(`/movies/${idData.imdb_id}`);
+      navigate(`/${idData.imdb_id}`);
     } catch (error) {}
   };
 

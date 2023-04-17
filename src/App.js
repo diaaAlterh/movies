@@ -14,38 +14,38 @@ import MovieImages, {
   loader as imagesLoader,
 } from "./features/movies/MovieImages";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <HomePage></HomePage>,
-    errorElement: <Error></Error>,
-    children: [
-      { index: true, element: <MoviesPage></MoviesPage> },
-      { path: "movies/", element: <MoviesPage></MoviesPage> },
-      { path: "movies/genres/:genre", element: <MoviesPage></MoviesPage> },
-      {
-        path: "movies/:id",
-        element: <MovieDetails></MovieDetails>,
-        loader: detailsLoader,
-      },
-      {
-        path: "movies/:id/images",
-        element: <MovieImages></MovieImages>,
-        loader: imagesLoader,
-      },
-      {
-        path: "actor/:id",
-        element: <ActorDetails></ActorDetails>,
-        loader: actorDetailsLoader,
-      },
-      {
-        path: "actor/:id/images",
-        element: <MovieImages></MovieImages>,
-        loader: imagesLoader,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <HomePage></HomePage>,
+      errorElement: <Error></Error>,
+      children: [
+        { index: true, element: <MoviesPage></MoviesPage> },
+        { path: "/genres/:genre", element: <MoviesPage></MoviesPage> },
+        {
+          path: "/:id",
+          element: <MovieDetails></MovieDetails>,
+          loader: detailsLoader,
+        },
+        {
+          path: "/:id/images",
+          element: <MovieImages></MovieImages>,
+          loader: imagesLoader,
+        },
+        {
+          path: "/actor/:id",
+          element: <ActorDetails></ActorDetails>,
+          loader: actorDetailsLoader,
+        },
+        {
+          path: "/actor/:id/images",
+          element: <MovieImages></MovieImages>,
+          loader: imagesLoader,
+        },
+      ],
+    },
+  ],{basename:"/movies"});
 
 function App() {
   return <RouterProvider router={router}></RouterProvider>;

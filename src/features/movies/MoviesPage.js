@@ -60,7 +60,7 @@ function MoviesPage() {
             {movies.map((movie) => (
               <Link
                 key={movie.imdb_code}
-                to={`${genre ? "/movies/" : ""}${movie.imdb_code}`}
+                to={`/${movie.imdb_code}`}
                 state={movie}
               >
                 <MovieItem
