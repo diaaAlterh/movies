@@ -25,6 +25,7 @@ import { TwitterTimelineEmbed } from "react-twitter-embed";
 import SideTitle from "../../components/SideTitle";
 import MovieItem from "./MovieItem";
 import { useMediaQuery } from "@mui/material";
+import { useTheme } from "@emotion/react";
 
 const MovieDetails = () => {
   const dispatch = useDispatch();
@@ -37,6 +38,8 @@ const MovieDetails = () => {
   const movieDetails = useSelector((state) => state.movieDetails.movie);
   const error = useSelector((state) => state.movieDetails.error);
   const isLoading = useSelector((state) => state.movieDetails.isLoading);
+  const theme=useTheme();
+
 
   useEffect(() => {
     dispatch(getMovieDetails({ id: params.id }));
@@ -59,8 +62,8 @@ const MovieDetails = () => {
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="absoulte" style={{ backgroundColor: "#13161d" }}>
-            <Toolbar>
+          <AppBar position="fixed">
+            <Toolbar sx={{ backgroundColor: theme.palette.primary.main }}>
               <Typography
                 variant={matches ? "h5" : null}
                 noWrap

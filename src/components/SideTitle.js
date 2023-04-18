@@ -5,13 +5,11 @@ const SideTitle = (props) => {
 
   return (
     <Typography
-      variant={matches?"h4":"s1"}
+      variant={matches ? "h4" : "s1"}
       noWrap
       component="div"
       sx={{
-        flexGrow: 1,
         display: { xs: "block", sm: "block" },
-        color: "white",
         padding: "20px",
       }}
     >

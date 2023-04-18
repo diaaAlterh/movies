@@ -9,11 +9,14 @@ import LinearBuffer from "../../components/LinearBuffer";
 import SideTitle from "../../components/SideTitle";
 import MovieItem from "./MovieItem";
 import styles from "./MoviesPage.module.css";
+import { useTheme } from "@emotion/react";
 
 const ActorDetails = () => {
   const actor = useLoaderData();
   const params = useParams();
   const navigate = useNavigate();
+  const theme=useTheme();
+
 
   const { data, isLoading, error } = useFetch(
     `${tmdbBaseUrl}person/${params.id}/movie_credits?api_key=${apiKey}`
@@ -40,8 +43,8 @@ const ActorDetails = () => {
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="fixed" style={{ backgroundColor: "#13161d" }}>
-            <Toolbar>
+          <AppBar position="fixed">
+            <Toolbar sx={{ backgroundColor: theme.palette.primary.main }}>
               <Typography
                 variant="h5"
                 noWrap

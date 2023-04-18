@@ -1,15 +1,18 @@
 import React from "react";
 import styles from "./DetailsHeader.module.css";
 import { pathToImageUrl } from "../app/utils";
-import { Stack ,useMediaQuery } from "@mui/material";
+import { Stack, useMediaQuery } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const ActorHeader = ({ actor }) => {
-  const matches = useMediaQuery('(min-width:800px)');
+  const matches = useMediaQuery("(min-width:800px)");
+  const mode = useSelector((state) => state.ui.mode);
+
 
   return (
     <Stack
-      direction={matches?"row":"column"}
+      direction={matches ? "row" : "column"}
       useFlexGap
       justifyContent="center"
       alignItems="center"
@@ -19,10 +22,16 @@ const ActorHeader = ({ actor }) => {
           src={pathToImageUrl(actor?.profile_path ?? "")}
           alt="Inner"
           className={styles.innerImage}
-          style={{ paddingTop: "30px", paddingLeft: matches?"30px":"0px" }}
+          style={{ paddingTop: "30px", paddingLeft: matches ? "30px" : "0px" }}
         />
       </Link>
-      <div className={styles.description} style={{ paddingLeft: matches?"0px":"30px" }}>
+      <div
+        className={styles.description}
+        style={{
+          paddingLeft: matches ? "0px" : "30px",
+          color: mode==="light"?"black":"white",
+        }}
+      >
         <p>{actor?.biography ?? ""}</p>
         <p>
           Born in {actor?.birthday ?? ""} at {actor?.place_of_birth ?? ""}

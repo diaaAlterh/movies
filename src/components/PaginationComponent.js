@@ -18,7 +18,7 @@ const PaginationComponent =(props)=>{
             onChange={props.onChange}
             page={props.page}
             count={+(props.count)}
-            color="primary"
+            color="secondary"
           />
         </div>
     );

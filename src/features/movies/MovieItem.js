@@ -23,10 +23,10 @@ const MovieItem = (props) => {
           bgcolor: "primary", // theme.palette.primary.main
           color: "white",
         },
+        padding:"0"
       }}
       variant="text"
       onClick={props.onClick}
-      style={{ padding: 0 }}
     >
       <li
         className={styles.movieItem}

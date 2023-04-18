@@ -13,6 +13,14 @@ import ActorDetails, {
 import MovieImages, {
   loader as imagesLoader,
 } from "./features/movies/MovieImages";
+import GenersPage, {
+  loader as GenersLoader,
+} from "./features/movies/GenersPage";
+import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
+import { useSelector } from "react-redux";
+import { getDesignTokens } from "./app/utils";
+
+
 
 const router = createBrowserRouter(
   [
@@ -22,6 +30,11 @@ const router = createBrowserRouter(
       errorElement: <Error></Error>,
       children: [
         { index: true, element: <MoviesPage></MoviesPage> },
+        {
+          path: "/genres/",
+          element: <GenersPage></GenersPage>,
+          loader: GenersLoader,
+        },
         { path: "/genres/:genre", element: <MoviesPage></MoviesPage> },
         {
           path: "/:id",
@@ -45,10 +58,21 @@ const router = createBrowserRouter(
         },
       ],
     },
-  ],{basename:"/movies"});
+  ],
+  { basename: "/movies" }
+);
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  const mode = useSelector((state) => state.ui.mode);
+  const theme =  createTheme(getDesignTokens(mode));
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <RouterProvider router={router}></RouterProvider>
+    </ThemeProvider>
+  );
 }
 
 export default App;
